@@ -4,17 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Artist {
+public class Event {
     private Long id;
-    private String stageName;
-    private String genre;
-    private Integer membersCount;
-    private String homeCity;
-    private Set<Event> events = new HashSet<>();
+    private LocalDate eventDate;
+    private Double ticketPrice;
+    private Integer availableTickets;
+    private Venue venue;
+    private Set<Artist> artists = new HashSet<>();
 }
