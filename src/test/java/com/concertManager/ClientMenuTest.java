@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -77,4 +78,32 @@ public class ClientMenuTest {
         // Restore original System.in
         System.setIn(originalIn);
     }
+
+    @Test
+    void testMenuOptionSearchEventsByArtistName() {
+        // Simulate user input
+        String simulatedInput = "3\nThe Testers\n0\n";
+        InputStream originalIn = System.in;
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes(StandardCharsets.UTF_8)));
+
+        // Create a mock EventClient
+        EventClient mockEventClient = mock(EventClient.class);
+
+        // Prepare a sample list of events returned for "The Testers"
+        List<Event> searchResults = List.of(new Event(301L, LocalDate.of(2025, 10, 5), 70.0, 120, null, new HashSet<>()));
+        when(mockEventClient.searchEventsByArtistName("The Testers")).thenReturn(searchResults);
+
+        // Instantiate ClientMenu with the mock EventClient; pass null for other clients.
+        ClientMenu menu = new ClientMenu(null, null, mockEventClient, null);
+
+        // Run the menu
+        menu.run();
+
+        // Verify that the search method was called with the correct parameter.
+        verify(mockEventClient).searchEventsByArtistName("The Testers");
+
+        // Restore original System.in
+        System.setIn(originalIn);
+    }
+
 }

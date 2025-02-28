@@ -86,4 +86,37 @@ public class EventClientTest {
 
         verify(httpClientWrapper).doGet("/events/upcoming");
     }
+
+    @Test
+    void testSearchEventsByArtistName_Success() throws Exception {
+        // Prepare two sample Event objects
+        Event event1 = new Event();
+        event1.setId(201L);
+        event1.setEventDate(LocalDate.of(2025, 8, 15));
+        event1.setTicketPrice(60.0);
+        event1.setAvailableTickets(150);
+
+        Event event2 = new Event();
+        event2.setId(202L);
+        event2.setEventDate(LocalDate.of(2025, 9, 1));
+        event2.setTicketPrice(65.0);
+        event2.setAvailableTickets(100);
+
+        // Create an array of events and convert it to JSON using the ObjectMapper.
+        Event[] eventsArray = { event1, event2 };
+        String jsonResponse = objectMapper.writeValueAsString(eventsArray);
+
+        // Stub the HttpClientWrapper: when search is called, return our JSON.
+        when(httpClientWrapper.doGet("/events/search?artistName=The Testers")).thenReturn(jsonResponse);
+
+        // Call the new method on EventClient.
+        List<Event> result = eventClient.searchEventsByArtistName("The Testers");
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(201L, result.get(0).getId());
+        assertEquals(202L, result.get(1).getId());
+
+        verify(httpClientWrapper).doGet("/events/search?artistName=The Testers");
+    }
 }

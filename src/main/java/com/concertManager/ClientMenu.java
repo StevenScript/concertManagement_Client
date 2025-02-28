@@ -46,7 +46,6 @@ public class ClientMenu {
                     }
                     break;
                 case "2":
-                    // New code for “List upcoming events”
                     List<Event> upcoming = eventClient.getUpcomingEvents();
                     if (upcoming.isEmpty()) {
                         System.out.println("No upcoming events found.");
@@ -55,6 +54,19 @@ public class ClientMenu {
                         for (Event e : upcoming) {
                             System.out.println("Event ID: " + e.getId() + ", Date: " + e.getEventDate() +
                                     ", Price: " + e.getTicketPrice() + ", Avail: " + e.getAvailableTickets());
+                        }
+                    }
+                    break;
+                case "3":
+                    System.out.print("Enter artist name to search for events: ");
+                    String artistName = scanner.nextLine();
+                    List<Event> searchResults = eventClient.searchEventsByArtistName(artistName);
+                    if (searchResults.isEmpty()) {
+                        System.out.println("No events found for artist: " + artistName);
+                    } else {
+                        System.out.println("Events for " + artistName + ":");
+                        for (Event e : searchResults) {
+                            System.out.println("Event ID: " + e.getId() + ", Date: " + e.getEventDate());
                         }
                     }
                     break;
