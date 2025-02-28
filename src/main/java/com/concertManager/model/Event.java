@@ -16,5 +16,6 @@ public class Event {
     private LocalDate eventDate;
     private Double ticketPrice;
     private Integer availableTickets;
+    private Venue venue;
     private Set<Artist> artists = new HashSet<>();
 }
