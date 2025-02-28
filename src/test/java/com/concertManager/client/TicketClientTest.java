@@ -105,4 +105,45 @@ public class TicketClientTest {
 
         verify(httpClientWrapper).doGet("/tickets/event/50");
     }
+
+    @Test
+    void testCreateTicket_Success() throws Exception {
+
+        Ticket ticketToCreate = new Ticket();
+        // Create a Event:
+        ticketToCreate.setEvent(new com.concertManager.model.Event());
+        ticketToCreate.getEvent().setId(60L);
+        ticketToCreate.setSeatNumber("A10");
+        ticketToCreate.setTicketType("VIP");
+        ticketToCreate.setBuyerName("John Doe");
+
+        // Prepare the expected Ticket returned from the server
+        Ticket expectedTicket = new Ticket();
+        expectedTicket.setId(200L);
+        expectedTicket.setEvent(ticketToCreate.getEvent());
+        expectedTicket.setSeatNumber("A10");
+        expectedTicket.setTicketType("VIP");
+        expectedTicket.setBuyerName("John Doe");
+
+        // Convert the expected Ticket to JSON.
+        String jsonResponse = objectMapper.writeValueAsString(expectedTicket);
+
+        // Stub the httpClientWrapper.doPost() call.
+        when(httpClientWrapper.doPost("/tickets", ticketToCreate))
+                .thenReturn(jsonResponse);
+
+        // Call createTicket on ticketClient.
+        Ticket result = ticketClient.createTicket(ticketToCreate);
+
+        // Verify that the returned Ticket matches expected values.
+        assertNotNull(result);
+        assertEquals(200L, result.getId());
+        assertNotNull(result.getEvent());
+        assertEquals(60L, result.getEvent().getId());
+        assertEquals("A10", result.getSeatNumber());
+        assertEquals("VIP", result.getTicketType());
+        assertEquals("John Doe", result.getBuyerName());
+
+        verify(httpClientWrapper).doPost("/tickets", ticketToCreate);
+    }
 }

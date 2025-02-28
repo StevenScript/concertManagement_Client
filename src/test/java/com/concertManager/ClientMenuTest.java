@@ -135,4 +135,37 @@ public class ClientMenuTest {
         System.setIn(originalIn);
     }
 
+    @Test
+    void testMenuOptionPurchaseTicket() {
+        String simulatedInput = "5\n60\nA10\nVIP\nJohn Doe\n0\n";
+        InputStream originalIn = System.in;
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes(StandardCharsets.UTF_8)));
+
+        TicketClient mockTicketClient = mock(TicketClient.class);
+
+        when(mockTicketClient.createTicket(any())).thenAnswer(invocation -> {
+            Object arg = invocation.getArgument(0);
+            if (arg instanceof com.concertManager.model.Ticket) {
+                com.concertManager.model.Ticket t = (com.concertManager.model.Ticket) arg;
+                t.setId(200L);
+                return t;
+            }
+            return null;
+        });
+
+        ClientMenu menu = new ClientMenu(null, null, null, mockTicketClient);
+
+        menu.run();
+
+        verify(mockTicketClient).createTicket(argThat(ticket ->
+                ticket.getEvent() != null &&
+                        ticket.getEvent().getId().equals(60L) &&
+                        "A10".equals(ticket.getSeatNumber()) &&
+                        "VIP".equals(ticket.getTicketType()) &&
+                        "John Doe".equals(ticket.getBuyerName())
+        ));
+
+        System.setIn(originalIn);
+    }
+
 }

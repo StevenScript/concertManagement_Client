@@ -45,4 +45,16 @@ public class TicketClient {
             return List.of();
         }
     }
+
+    public Ticket createTicket(Ticket ticket) {
+        String path = "/tickets";
+        String response = httpClientWrapper.doPost(path, ticket);
+        if (response == null) return null;
+        try {
+            return objectMapper.readValue(response, Ticket.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
