@@ -1,26 +1,28 @@
-package com.concertManager;
+package com.concertManager.client;
 
-import com.concertManager.model.Artist;
+import com.concertManager.HttpClientWrapper;
+import com.concertManager.model.Ticket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-public class ArtistClient {
+
+public class TicketClient {
 
     private final HttpClientWrapper httpClientWrapper;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public ArtistClient(HttpClientWrapper httpClientWrapper) {
+    public TicketClient(HttpClientWrapper httpClientWrapper) {
         this.httpClientWrapper = httpClientWrapper;
     }
 
-    public Artist getArtist(Long id) {
-        String path = "/artists/" + id;
+    public Ticket getTicket(Long id) {
+        String path = "/tickets/" + id;
         String response = httpClientWrapper.doGet(path);
         if (response == null) {
-            return null;  // Or throw an exception
+            return null;
         }
         try {
-            return objectMapper.readValue(response, Artist.class);
+            return objectMapper.readValue(response, Ticket.class);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
