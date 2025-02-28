@@ -69,6 +69,14 @@
             <version>2.0.9</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Lombok for reducing boilerplate in DTO classes -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.26</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
