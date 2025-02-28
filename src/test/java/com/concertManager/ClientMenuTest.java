@@ -2,8 +2,10 @@ package com.concertManager;
 
 import com.concertManager.client.ArtistClient;
 import com.concertManager.client.EventClient;
+import com.concertManager.client.TicketClient;
 import com.concertManager.model.Artist;
 import com.concertManager.model.Event;
+import com.concertManager.model.Ticket;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -101,6 +103,33 @@ public class ClientMenuTest {
 
         // Verify that the search method was called with the correct parameter.
         verify(mockEventClient).searchEventsByArtistName("The Testers");
+
+        // Restore original System.in
+        System.setIn(originalIn);
+    }
+
+    @Test
+    void testMenuOptionViewAvailableTickets() {
+        // Simulate user input
+        String simulatedInput = "4\n50\n0\n";
+        InputStream originalIn = System.in;
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes(StandardCharsets.UTF_8)));
+
+        // Create a mock TicketClient with getTicketsForEvent implemented.
+        TicketClient mockTicketClient = mock(TicketClient.class);
+        // Prepare an empty list or some sample tickets (for testing, let's return an empty list).
+        List<Ticket> sampleTickets = List.of(); // or List.of(sampleTicket1, sampleTicket2)
+        when(mockTicketClient.getTicketsForEvent(50L)).thenReturn(sampleTickets);
+
+        // Instantiate ClientMenu with the mock TicketClient.
+       // if not, pass null)
+        ClientMenu menu = new ClientMenu(null, null, null, mockTicketClient);
+
+        // Run the menu, which should process the simulated input.
+        menu.run();
+
+        // Verify that getTicketsForEvent was called with the correct event ID.
+        verify(mockTicketClient).getTicketsForEvent(50L);
 
         // Restore original System.in
         System.setIn(originalIn);

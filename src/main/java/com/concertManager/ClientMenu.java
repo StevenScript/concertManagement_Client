@@ -2,8 +2,10 @@ package com.concertManager;
 
 import com.concertManager.client.ArtistClient;
 import com.concertManager.client.EventClient;
+import com.concertManager.client.TicketClient;
 import com.concertManager.model.Artist;
 import com.concertManager.model.Event;
+import com.concertManager.model.Ticket;
 
 import java.util.List;
 import java.util.Scanner;
@@ -11,12 +13,14 @@ public class ClientMenu {
 
     private final ArtistClient artistClient;
     private final EventClient eventClient;
-    // TODO: add VenueClient, EventClient, TicketClient.
+    private final TicketClient ticketClient;
+    // TODO: add VenueClient
 
 
-    public ClientMenu(ArtistClient artistClient, Object venueClient, EventClient eventClient, Object ticketClient) {
+    public ClientMenu(ArtistClient artistClient, Object venueClient, EventClient eventClient, TicketClient ticketClient) {
         this.artistClient = artistClient;
         this.eventClient = eventClient;
+        this.ticketClient = ticketClient;
     }
 
     public void run() {
@@ -26,6 +30,8 @@ public class ClientMenu {
             System.out.println("Select an action:");
             System.out.println("1) Get artist by ID");
             System.out.println("2) List upcoming events");
+            System.out.println("3) Search events by artist name");
+            System.out.println("4) View available tickets for an event");
             System.out.println("0) Exit");
 
             String choice = scanner.nextLine();
@@ -68,6 +74,24 @@ public class ClientMenu {
                         for (Event e : searchResults) {
                             System.out.println("Event ID: " + e.getId() + ", Date: " + e.getEventDate());
                         }
+                    }
+                    break;
+                case "4":
+                    System.out.print("Enter event ID to view available tickets: ");
+                    try {
+                        Long eventId = Long.parseLong(scanner.nextLine());
+                        List<Ticket> tickets = ticketClient.getTicketsForEvent(eventId);
+                        if (tickets.isEmpty()) {
+                            System.out.println("No tickets available for event " + eventId);
+                        } else {
+                            System.out.println("Available Tickets for event " + eventId + ":");
+                            for (Ticket t : tickets) {
+                                System.out.println("Ticket ID: " + t.getId() + ", Seat: " + t.getSeatNumber() +
+                                        ", Type: " + t.getTicketType());
+                            }
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid event ID.");
                     }
                     break;
                 case "0":
