@@ -12,6 +12,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -51,5 +52,38 @@ public class EventClientTest {
         assertEquals(150, result.getAvailableTickets());
 
         verify(httpClientWrapper).doGet("/events/7");
+    }
+
+    @Test
+    void testGetUpcomingEvents_Success() throws Exception {
+        // Server returns an array of Events
+        Event event1 = new Event();
+        event1.setId(101L);
+        event1.setEventDate(LocalDate.of(2025, 5, 10));
+        event1.setTicketPrice(50.0);
+        event1.setAvailableTickets(100);
+
+        Event event2 = new Event();
+        event2.setId(102L);
+        event2.setEventDate(LocalDate.of(2025, 7, 1));
+        event2.setTicketPrice(75.0);
+        event2.setAvailableTickets(200);
+
+        // Convert to JSON array
+        Event[] upcomingArray = { event1, event2 };
+        String jsonResponse = objectMapper.writeValueAsString(upcomingArray);
+
+        // When doGet is called with "/events/upcoming", return that JSON
+        when(httpClientWrapper.doGet("/events/upcoming")).thenReturn(jsonResponse);
+
+        // Call getUpcomingEvents
+        List<Event> result = eventClient.getUpcomingEvents();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(101L, result.get(0).getId());
+        assertEquals(102L, result.get(1).getId());
+
+        verify(httpClientWrapper).doGet("/events/upcoming");
     }
 }

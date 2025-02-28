@@ -1,17 +1,22 @@
 package com.concertManager;
 
 import com.concertManager.client.ArtistClient;
+import com.concertManager.client.EventClient;
 import com.concertManager.model.Artist;
+import com.concertManager.model.Event;
 
+import java.util.List;
 import java.util.Scanner;
 public class ClientMenu {
 
     private final ArtistClient artistClient;
+    private final EventClient eventClient;
     // TODO: add VenueClient, EventClient, TicketClient.
 
 
-    public ClientMenu(ArtistClient artistClient, Object venueClient, Object eventClient, Object ticketClient) {
+    public ClientMenu(ArtistClient artistClient, Object venueClient, EventClient eventClient, Object ticketClient) {
         this.artistClient = artistClient;
+        this.eventClient = eventClient;
     }
 
     public void run() {
@@ -20,6 +25,7 @@ public class ClientMenu {
         while (!exit) {
             System.out.println("Select an action:");
             System.out.println("1) Get artist by ID");
+            System.out.println("2) List upcoming events");
             System.out.println("0) Exit");
 
             String choice = scanner.nextLine();
@@ -37,6 +43,19 @@ public class ClientMenu {
                         }
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid ID format.");
+                    }
+                    break;
+                case "2":
+                    // New code for “List upcoming events”
+                    List<Event> upcoming = eventClient.getUpcomingEvents();
+                    if (upcoming.isEmpty()) {
+                        System.out.println("No upcoming events found.");
+                    } else {
+                        System.out.println("Upcoming Events:");
+                        for (Event e : upcoming) {
+                            System.out.println("Event ID: " + e.getId() + ", Date: " + e.getEventDate() +
+                                    ", Price: " + e.getTicketPrice() + ", Avail: " + e.getAvailableTickets());
+                        }
                     }
                     break;
                 case "0":

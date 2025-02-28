@@ -1,13 +1,18 @@
 package com.concertManager;
 
 import com.concertManager.client.ArtistClient;
+import com.concertManager.client.EventClient;
 import com.concertManager.model.Artist;
+import com.concertManager.model.Event;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -39,6 +44,37 @@ public class ClientMenuTest {
         verify(mockArtistClient).getArtist(1L);
 
         // Restore the original System.in
+        System.setIn(originalIn);
+    }
+
+
+    @Test
+    void testMenuOptionListUpcomingEvents() {
+        // Simulate user input: "2" (option) then "0" (exit)
+        String simulatedInput = "2\n0\n";
+        InputStream originalIn = System.in;
+        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes(StandardCharsets.UTF_8)));
+
+        // Create a mock EventClient
+        EventClient mockEventClient = mock(EventClient.class);
+        List<Event> upcomingEvents = new ArrayList<>();
+        Event e1 = new Event();
+        e1.setId(101L);
+        e1.setEventDate(LocalDate.of(2025, 6, 1));
+        upcomingEvents.add(e1);
+
+        when(mockEventClient.getUpcomingEvents()).thenReturn(upcomingEvents);
+
+        // We'll pass null for other clients for now
+        ClientMenu menu = new ClientMenu(null, null, mockEventClient, null);
+
+        // Run the menu
+        menu.run();
+
+        // Verify that getUpcomingEvents() was called
+        verify(mockEventClient).getUpcomingEvents();
+
+        // Restore original System.in
         System.setIn(originalIn);
     }
 }
