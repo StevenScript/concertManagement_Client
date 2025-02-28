@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
 public class EventClient {
 
     private final HttpClientWrapper httpClientWrapper;
@@ -28,6 +31,20 @@ public class EventClient {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public List<Event> getUpcomingEvents() {
+        String response = httpClientWrapper.doGet("/events/upcoming");
+        if (response == null) {
+            return List.of();
+        }
+        try {
+            Event[] array = objectMapper.readValue(response, Event[].class);
+            return Arrays.asList(array);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return List.of();
         }
     }
 }
