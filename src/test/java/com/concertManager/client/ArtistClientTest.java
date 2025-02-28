@@ -1,5 +1,6 @@
-package com.concertManager;
+package com.concertManager.client;
 
+import com.concertManager.HttpClientWrapper;
 import com.concertManager.model.Artist;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
