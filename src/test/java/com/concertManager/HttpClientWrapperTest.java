@@ -14,6 +14,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -61,5 +66,38 @@ public class HttpClientWrapperTest {
 
         // Verify that the mocks execute method was called.
         verify(mockHttpClient).execute(any(HttpGet.class), any(HttpClientResponseHandler.class));
+    }
+
+    @Test
+    void testDoPost_ReturnsExpectedResponse() throws Exception {
+        String expectedResponse = "Post response";
+
+        // Stub the execute method for HttpPost.
+        when(mockHttpClient.execute(any(HttpPost.class), any(HttpClientResponseHandler.class)))
+                .thenAnswer(invocation -> {
+                    HttpClientResponseHandler<String> handler = invocation.getArgument(1);
+                    BasicClassicHttpResponse fakeResponse = new BasicClassicHttpResponse(HttpStatus.SC_OK);
+                    HttpEntity entity = new StringEntity(expectedResponse, ContentType.TEXT_PLAIN);
+                    fakeResponse.setEntity(entity);
+                    return handler.handleResponse(fakeResponse);
+                });
+
+        // Dummy object to send in the POST request.
+        Dummy dummy = new Dummy();
+        dummy.setName("testName");
+
+        String actualResponse = httpClientWrapper.doPost("/dummy", dummy);
+        assertNotNull(actualResponse, "Response from doPost should not be null");
+        assertEquals(expectedResponse, actualResponse);
+
+        verify(mockHttpClient).execute(any(HttpPost.class), any(HttpClientResponseHandler.class));
+    }
+
+    // Dummy class for testing POST body conversion.
+    static class Dummy {
+        private String name;
+
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
     }
 }
