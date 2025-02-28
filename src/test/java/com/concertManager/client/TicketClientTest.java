@@ -110,7 +110,7 @@ public class TicketClientTest {
     void testCreateTicket_Success() throws Exception {
 
         Ticket ticketToCreate = new Ticket();
-        // Create a minimal Event:
+        // Create a Event:
         ticketToCreate.setEvent(new com.concertManager.model.Event());
         ticketToCreate.getEvent().setId(60L);
         ticketToCreate.setSeatNumber("A10");
