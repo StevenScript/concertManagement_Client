@@ -47,4 +47,20 @@ public class EventClient {
             return List.of();
         }
     }
+
+    public List<Event> searchEventsByArtistName(String artistName) {
+        String path = "/events/search?artistName=" + artistName;
+        String response = httpClientWrapper.doGet(path);
+        if (response == null) {
+            return List.of();
+        }
+        try {
+            Event[] events = objectMapper.readValue(response, Event[].class);
+            return Arrays.asList(events);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
 }

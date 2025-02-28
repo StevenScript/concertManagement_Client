@@ -111,7 +111,7 @@ public class EventClientTest {
 
         // Call the new method on EventClient.
         List<Event> result = eventClient.searchEventsByArtistName("The Testers");
-        
+
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals(201L, result.get(0).getId());
