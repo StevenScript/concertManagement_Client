@@ -94,6 +94,36 @@ public class ClientMenu {
                         System.out.println("Invalid event ID.");
                     }
                     break;
+                case "5":
+                    try {
+                        System.out.print("Enter event ID: ");
+                        Long eventId = Long.parseLong(scanner.nextLine());
+                        System.out.print("Enter seat number: ");
+                        String seatNumber = scanner.nextLine();
+                        System.out.print("Enter ticket type (e.g., VIP, GA): ");
+                        String ticketType = scanner.nextLine();
+                        System.out.print("Enter buyer name: ");
+                        String buyerName = scanner.nextLine();
+
+                        Event event = new Event();
+                        event.setId(eventId);
+
+                        Ticket ticketToPurchase = new Ticket();
+                        ticketToPurchase.setEvent(event);
+                        ticketToPurchase.setSeatNumber(seatNumber);
+                        ticketToPurchase.setTicketType(ticketType);
+                        ticketToPurchase.setBuyerName(buyerName);
+
+                        Ticket purchasedTicket = ticketClient.createTicket(ticketToPurchase);
+                        if (purchasedTicket == null) {
+                            System.out.println("Ticket purchase failed.");
+                        } else {
+                            System.out.println("Ticket purchased successfully! Ticket ID: " + purchasedTicket.getId());
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input for event ID.");
+                    }
+                    break;
                 case "0":
                     exit = true;
                     break;
