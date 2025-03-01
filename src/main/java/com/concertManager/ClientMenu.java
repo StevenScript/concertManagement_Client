@@ -67,16 +67,22 @@ public class ClientMenu {
                     }
                     break;
                 case "3":
-                    System.out.print("Enter artist name to search for events: ");
-                    String artistName = scanner.nextLine();
-                    List<Event> searchResults = eventClient.searchEventsByArtistName(artistName);
-                    if (searchResults.isEmpty()) {
-                        System.out.println("No events found for artist: " + artistName);
-                    } else {
-                        System.out.println("Events for " + artistName + ":");
-                        for (Event e : searchResults) {
-                            System.out.println("Event ID: " + e.getId() + ", Date: " + e.getEventDate());
+                    System.out.print("Enter artist ID: ");
+                    String artistIdInput = scanner.nextLine();
+                    try {
+                        Long artistId = Long.parseLong(artistIdInput);  // Convert input to Long
+                        Event[] events = eventClient.getEventsByArtistId(artistId);
+                        if (events.length == 0) {
+                            System.out.println("No events found for artist ID: " + artistId);
+                        } else {
+                            for (Event event : events) {
+                                System.out.println(event.getEventDate() + " - $" + event.getTicketPrice());
+                            }
                         }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid ID format. Please enter a valid number.");
+                    } catch (IOException e) {
+                        System.out.println("Error fetching events: " + e.getMessage());
                     }
                     break;
                 case "4":
