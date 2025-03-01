@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ClientMenuTest {
 
     @Test
-    void testMenuOptionGetArtist() {
+    void testMenuOptionGetArtist() throws IOException {
         // Simulate user input:
         // "1" to select Get Artist, then "1" for artist ID, then "0" to exit.
         String simulatedInput = "1\n1\n0\n";
@@ -52,7 +53,7 @@ public class ClientMenuTest {
 
 
     @Test
-    void testMenuOptionListUpcomingEvents() {
+    void testMenuOptionListUpcomingEvents() throws IOException {
         // Simulate user input: "2" (option) then "0" (exit)
         String simulatedInput = "2\n0\n";
         InputStream originalIn = System.in;
@@ -82,7 +83,7 @@ public class ClientMenuTest {
     }
 
     @Test
-    void testMenuOptionViewAvailableTickets() {
+    void testMenuOptionViewAvailableTickets() throws IOException {
         // Simulate user input
         String simulatedInput = "4\n50\n0\n";
         InputStream originalIn = System.in;
@@ -109,7 +110,7 @@ public class ClientMenuTest {
     }
 
     @Test
-    void testMenuOptionPurchaseTicket() {
+    void testMenuOptionPurchaseTicket() throws IOException {
         String simulatedInput = "5\n60\nA10\nVIP\nJohn Doe\n0\n";
         InputStream originalIn = System.in;
         System.setIn(new ByteArrayInputStream(simulatedInput.getBytes(StandardCharsets.UTF_8)));

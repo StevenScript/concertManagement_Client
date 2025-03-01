@@ -24,7 +24,7 @@ public class ClientMenu {
         this.ticketClient = ticketClient;
     }
 
-    public void run() {
+    public void run() throws IOException {
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
         while (!exit) {
@@ -33,6 +33,7 @@ public class ClientMenu {
             System.out.println("2) List upcoming events");
             System.out.println("3) Search events by artist name");
             System.out.println("4) View available tickets for an event");
+            System.out.println("5) Purchase tickets for an event");
             System.out.println("0) Exit");
 
             String choice = scanner.nextLine();
@@ -52,39 +53,29 @@ public class ClientMenu {
                         System.out.println("Invalid ID format.");
                     }
                     break;
-                case "2":
-                    try {
-                        Event[] events = eventClient.getUpcomingEvents();
-                        if (events.length == 0) {
-                            System.out.println("No upcoming events found.");
-                        } else {
-                            for (Event event : events) {
-                                System.out.println(event.getEventDate() + " - $" + event.getTicketPrice());
-                            }
+                case "2": {
+                    List<Event> events = eventClient.getUpcomingEvents();
+                    if (events.isEmpty()) {
+                        System.out.println("No upcoming events found.");
+                    } else {
+                        for (Event e : events) {
+                            System.out.println(e.getEventDate() + " - $" + e.getTicketPrice());
                         }
-                    } catch (IOException e) {
-                        System.out.println("Error fetching events: " + e.getMessage());
                     }
                     break;
-                case "3":
-                    System.out.print("Enter artist ID: ");
-                    String artistIdInput = scanner.nextLine();
-                    try {
-                        Long artistId = Long.parseLong(artistIdInput);  // Convert input to Long
-                        Event[] events = eventClient.getEventsByArtistId(artistId);
-                        if (events.length == 0) {
-                            System.out.println("No events found for artist ID: " + artistId);
-                        } else {
-                            for (Event event : events) {
-                                System.out.println(event.getEventDate() + " - $" + event.getTicketPrice());
-                            }
+                }
+                case "3": {
+                    Long artistId = 0L;
+                    List<Event> events = List.of(eventClient.getEventsByArtistId(artistId));
+                    if (events.isEmpty()) {
+                        System.out.println("No events found for artist ID: " + artistId);
+                    } else {
+                        for (Event e : events) {
+                            System.out.println(e.getEventDate() + " - $" + e.getTicketPrice());
                         }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid ID format. Please enter a valid number.");
-                    } catch (IOException e) {
-                        System.out.println("Error fetching events: " + e.getMessage());
                     }
                     break;
+                }
                 case "4":
                     System.out.print("Enter event ID to view available tickets: ");
                     try {

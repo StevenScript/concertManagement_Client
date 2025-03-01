@@ -2,11 +2,13 @@ package com.concertManager.client;
 
 import com.concertManager.HttpClientWrapper;
 import com.concertManager.model.Event;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class EventClient {
@@ -34,12 +36,21 @@ public class EventClient {
         }
     }
 
-    public Event[] getUpcomingEvents() throws IOException {
-        String response = httpClientWrapper.doGet("/events/upcoming");
-        if (response.contains("error")) {
-            throw new IOException("Failed to fetch events: " + response);
+    public List<Event> getUpcomingEvents() {
+        try {
+            String jsonResponse = httpClientWrapper.doGet("/events/upcoming");
+
+            // Directly parse the JSON array into a List<Event>
+            List<Event> events = objectMapper.readValue(
+                    jsonResponse,
+                    new TypeReference<List<Event>>() {}
+            );
+            return events;
+
+        } catch (Exception e) {
+            System.err.println("Error fetching events: " + e.getMessage());
+            return Collections.emptyList();
         }
-        return objectMapper.readValue(response, Event[].class);
     }
 
     public Event[] getEventsByArtistId(Long artistId) throws IOException {

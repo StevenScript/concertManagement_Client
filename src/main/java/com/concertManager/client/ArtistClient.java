@@ -3,15 +3,18 @@ package com.concertManager.client;
 import com.concertManager.HttpClientWrapper;
 import com.concertManager.model.Artist;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
 public class ArtistClient {
 
     private final HttpClientWrapper httpClientWrapper;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public ArtistClient(HttpClientWrapper httpClientWrapper) {
         this.httpClientWrapper = httpClientWrapper;
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
     }
 
     public Artist getArtist(Long id) {

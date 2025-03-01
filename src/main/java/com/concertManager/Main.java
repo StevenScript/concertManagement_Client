@@ -6,8 +6,11 @@ import com.concertManager.client.TicketClient;
 import com.concertManager.client.VenueClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+
+import java.io.IOException;
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // 1) Set the base URL for your server's REST API.
         String baseUrl = "http://localhost:8080";
 
