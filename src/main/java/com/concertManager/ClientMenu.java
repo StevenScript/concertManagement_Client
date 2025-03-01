@@ -7,6 +7,7 @@ import com.concertManager.model.Artist;
 import com.concertManager.model.Event;
 import com.concertManager.model.Ticket;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 public class ClientMenu {
@@ -52,15 +53,17 @@ public class ClientMenu {
                     }
                     break;
                 case "2":
-                    List<Event> upcoming = eventClient.getUpcomingEvents();
-                    if (upcoming.isEmpty()) {
-                        System.out.println("No upcoming events found.");
-                    } else {
-                        System.out.println("Upcoming Events:");
-                        for (Event e : upcoming) {
-                            System.out.println("Event ID: " + e.getId() + ", Date: " + e.getEventDate() +
-                                    ", Price: " + e.getTicketPrice() + ", Avail: " + e.getAvailableTickets());
+                    try {
+                        Event[] events = eventClient.getUpcomingEvents();
+                        if (events.length == 0) {
+                            System.out.println("No upcoming events found.");
+                        } else {
+                            for (Event event : events) {
+                                System.out.println(event.getEventDate() + " - $" + event.getTicketPrice());
+                            }
                         }
+                    } catch (IOException e) {
+                        System.out.println("Error fetching events: " + e.getMessage());
                     }
                     break;
                 case "3":
@@ -95,6 +98,7 @@ public class ClientMenu {
                     }
                     break;
                 case "5":
+                    System.out.print("Purchase Ticket ");
                     try {
                         System.out.print("Enter event ID: ");
                         Long eventId = Long.parseLong(scanner.nextLine());

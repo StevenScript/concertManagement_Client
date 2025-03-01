@@ -34,18 +34,12 @@ public class EventClient {
         }
     }
 
-    public List<Event> getUpcomingEvents() {
+    public Event[] getUpcomingEvents() throws IOException {
         String response = httpClientWrapper.doGet("/events/upcoming");
-        if (response == null) {
-            return List.of();
+        if (response.contains("error")) {
+            throw new IOException("Failed to fetch events: " + response);
         }
-        try {
-            Event[] array = objectMapper.readValue(response, Event[].class);
-            return Arrays.asList(array);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return List.of();
-        }
+        return objectMapper.readValue(response, Event[].class);
     }
 
     public List<Event> searchEventsByArtistName(String artistName) {
