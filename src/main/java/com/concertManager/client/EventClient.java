@@ -40,7 +40,6 @@ public class EventClient {
         try {
             String jsonResponse = httpClientWrapper.doGet("/events/upcoming");
 
-            // Directly parse the JSON array into a List<Event>
             List<Event> events = objectMapper.readValue(
                     jsonResponse,
                     new TypeReference<List<Event>>() {}
@@ -56,12 +55,10 @@ public class EventClient {
     public List<Event> getEventsByArtistId(Long artistId) throws IOException {
         String response = httpClientWrapper.doGet("/events/artist/" + artistId);
 
-        // If response is "" or "[]", parse accordingly
         if (response.isEmpty()) {
             return Collections.emptyList();
         }
 
-        // Now parse as either an array or list
         Event[] array = objectMapper.readValue(response, Event[].class);
         return Arrays.asList(array);
     }

@@ -56,7 +56,6 @@ public class EventClientTest {
 
     @Test
     void testGetUpcomingEvents_Success() throws Exception {
-        // Server returns an array of Events
         Event event1 = new Event();
         event1.setId(101L);
         event1.setEventDate(LocalDate.of(2025, 5, 10));
@@ -68,15 +67,11 @@ public class EventClientTest {
         event2.setEventDate(LocalDate.of(2025, 7, 1));
         event2.setTicketPrice(75.0);
         event2.setAvailableTickets(200);
-
-        // Convert to JSON array
         Event[] upcomingArray = { event1, event2 };
         String jsonResponse = objectMapper.writeValueAsString(upcomingArray);
 
-        // When doGet is called with "/events/upcoming", return that JSON
         when(httpClientWrapper.doGet("/events/upcoming")).thenReturn(jsonResponse);
 
-        // Call getUpcomingEvents
         List<Event> result = eventClient.getUpcomingEvents();
 
         assertNotNull(result);

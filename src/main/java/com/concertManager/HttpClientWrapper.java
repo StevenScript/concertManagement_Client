@@ -20,7 +20,6 @@ public class HttpClientWrapper {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    // Injection of a mocked HttpClient.
     public HttpClientWrapper(String baseUrl, CloseableHttpClient httpClient) {
         this.baseUrl = baseUrl;
         this.httpClient = httpClient;
@@ -30,20 +29,15 @@ public class HttpClientWrapper {
         HttpGet request = new HttpGet(baseUrl + endpoint);
         return httpClient.execute(request, response -> {
             int statusCode = response.getCode();
-            // If needed, handle 404 or 500, etc.:
             if (statusCode >= 400) {
-                // Optionally throw or return some fallback
                 System.err.println("Error from server. Status code: " + statusCode);
-                return "[]"; // or throw new RuntimeException("Something bad happened");
-            }
-
-            // Check if there's an entity
-            HttpEntity entity = response.getEntity();
-            if (entity == null) {
-                // Return empty string or handle how you like
                 return "[]";
             }
-            // Otherwise parse
+
+            HttpEntity entity = response.getEntity();
+            if (entity == null) {
+                return "[]";
+            }
             return EntityUtils.toString(entity);
         });
     }
@@ -51,7 +45,6 @@ public class HttpClientWrapper {
     public String doPost(String path, Object body) {
         String url = baseUrl + path;
         try {
-            // Convert body object to JSON string
             String jsonBody = objectMapper.writeValueAsString(body);
             HttpPost request = new HttpPost(url);
             request.setEntity(new StringEntity(jsonBody, ContentType.APPLICATION_JSON));

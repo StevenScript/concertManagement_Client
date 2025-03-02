@@ -73,10 +73,7 @@ public class ClientMenu {
                     }
                     try {
                         Long artistId = Long.parseLong(artistIdInput);
-                        // Debug print: you can remove this once working
-                        System.out.println("DEBUG: Parsed artist ID: " + artistId);
 
-                        // Assume getEventsByArtistId returns a List<Event>
                         List<Event> events = eventClient.getEventsByArtistId(artistId);
                         if (events.isEmpty()) {
                             System.out.println("No events found for artist ID: " + artistId);

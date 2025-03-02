@@ -30,7 +30,6 @@ public class ArtistClientTest {
 
     @Test
     void testGetArtist_Success() throws Exception {
-        // Prepare a sample Artist as JSON (server would return this)
         Artist expectedArtist = new Artist();
         expectedArtist.setId(1L);
         expectedArtist.setStageName("Test Artist");
@@ -38,13 +37,10 @@ public class ArtistClientTest {
 
         String jsonResponse = objectMapper.writeValueAsString(expectedArtist);
 
-        // When HTTP client is called, return the JSON response
         when(httpClientWrapper.doGet("/artists/1")).thenReturn(jsonResponse);
 
-        // Call the client
         Artist result = artistClient.getArtist(1L);
 
-        // Assert
         assertNotNull(result, "Artist should not be null");
         assertEquals(1L, result.getId());
         assertEquals("Test Artist", result.getStageName());

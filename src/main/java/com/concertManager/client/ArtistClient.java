@@ -21,7 +21,7 @@ public class ArtistClient {
         String path = "/artists/" + id;
         String response = httpClientWrapper.doGet(path);
         if (response == null) {
-            return null;  // Or throw an exception
+            return null;
         }
         try {
             return objectMapper.readValue(response, Artist.class);

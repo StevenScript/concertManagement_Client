@@ -19,7 +19,7 @@ public class VenueClient {
         String path = "/venues/" + id;
         String response = httpClientWrapper.doGet(path);
         if (response == null) {
-            return null;  // Alternatively, throw an exception
+            return null;
         }
         try {
             return objectMapper.readValue(response, Venue.class);

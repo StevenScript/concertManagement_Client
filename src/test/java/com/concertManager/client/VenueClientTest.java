@@ -30,30 +30,24 @@ public class VenueClientTest {
 
     @Test
     void testGetVenue_Success() throws Exception {
-        // Create Venue object
         Venue expectedVenue = new Venue();
         expectedVenue.setId(5L);
         expectedVenue.setName("Grand Hall");
         expectedVenue.setLocation("City Center");
         expectedVenue.setCapacity(5000);
 
-        // Convert to JSON using Jackson
         String jsonResponse = objectMapper.writeValueAsString(expectedVenue);
 
-        // When doGet is called on the wrapper, return the JSON response
         when(httpClientWrapper.doGet("/venues/5")).thenReturn(jsonResponse);
 
-        // Call the client method
         Venue result = venueClient.getVenue(5L);
 
-        // Verify the result
         assertNotNull(result, "Resulting Venue should not be null");
         assertEquals(5L, result.getId());
         assertEquals("Grand Hall", result.getName());
         assertEquals("City Center", result.getLocation());
         assertEquals(5000, result.getCapacity());
 
-        // Verify that the HTTP client was called with the correct path
         verify(httpClientWrapper).doGet("/venues/5");
     }
 }
