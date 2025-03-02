@@ -1,235 +1,71 @@
-# 🎶 Concert Management Client
+## Author - Steven Norris
+## Date - February 28th, 2025
 
-**A Command-Line Interface (CLI) application for managing concerts, artists, venues, and ticket bookings by interacting with the Concert Management Server's RESTful API.**
+# Concert Management Client
 
----
+## Overview
+The **Concert Management Client** is a Java-based application designed to interact with a Spring Boot REST API that manages concerts, artists, events, tickets, and venues. This client provides a command-line interface (CLI) for users to retrieve and manage concert-related data via HTTP requests.
 
-## 📌 Overview
+## Features
+- Retrieve artist details by ID
+- List upcoming events
+- Search for events by artist ID
+- View available tickets for a specific event
+- Purchase tickets for an event
 
-This project is a **Java-based CLI client** designed to interact with the [Concert Management Server](https://github.com/StevenScript/concertManagement_Server). The client allows users to perform various operations related to concerts, artists, venues, and ticket bookings by making HTTP requests to the server's RESTful API.
+## Technologies Used
+- Java 17
+- Apache HttpClient (for HTTP requests)
+- Jackson Databind (for JSON parsing)
+- Lombok (for cleaner model classes)
+- Scanner (for user input handling)
 
----
-
-## 🎮 CLI Features & Options
-
-The client provides several command-line options to manage and query concert-related data:
-
-### **1. List Artists**
-
-**Command:**
-```sh
-list-artists
+## Project Structure
+```
+concertManager/
+│── src/
+│   ├── main/
+│   │   ├── java/com/concertManager/
+│   │   │   ├── client/        # Clients for interacting with the API
+│   │   │   ├── model/         # Data models (Artist, Event, Ticket, Venue)
+│   │   │   ├── HttpClientWrapper.java  # Handles API communication
+│   │   │   ├── ClientMenu.java  # CLI for user interaction
+│   │   │   ├── Main.java  # Entry point of the application
+│── pom.xml  # Project dependencies
+│── README.md  # Project documentation
 ```
 
-**Description:**  
-Retrieves and displays a list of all artists available in the system.
+## Installation & Setup
+### Prerequisites
+- Java 17 or later
+- Apache Maven
+- Spring Boot API running at `http://localhost:8080`
 
-**Example:**
-```sh
-> list-artists
-1. Taylor Swift - Genre: Pop
-2. Ed Sheeran - Genre: Pop
-3. The Weeknd - Genre: R&B
-```
+### Steps to Run the Client
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/your-repo/concert-management-client.git
+   cd concert-management-client
+   ```
+2. Compile the project using Maven:
+   ```sh
+   mvn clean compile
+   ```
+3. Run the application:
+   ```sh
+   mvn exec:java -Dexec.mainClass="com.concertManager.Main"
+   ```
 
----
+## Usage
+Upon running the application, a menu will be displayed with options for managing artists, events, and tickets. Users can enter the corresponding number to execute different operations.
 
-### **2. List Venues**
+## API Endpoints Used
+- `GET /artists/{id}` - Fetch an artist by ID
+- `GET /events/upcoming` - Retrieve upcoming events
+- `GET /events/artist/{artistId}` - Get events for a specific artist
+- `GET /tickets/event/{eventId}` - Get available tickets for an event
+- `POST /tickets` - Purchase a ticket
 
-**Command:**
-```sh
-list-venues
-```
-
-**Description:**  
-Retrieves and displays a list of all venues.
-
-**Example:**
-```sh
-> list-venues
-1. Madison Square Garden - Location: New York, NY - Capacity: 20,000
-2. The O2 Arena - Location: London, UK - Capacity: 20,000
-3. Sydney Opera House - Location: Sydney, Australia - Capacity: 5,738
-```
-
----
-
-### **3. List Concerts**
-
-**Command:**
-```sh
-list-concerts
-```
-
-**Description:**  
-Retrieves and displays a list of all concerts.
-
-**Example:**
-```sh
-> list-concerts
-1. Artist: Taylor Swift - Venue: Madison Square Garden - Date: 2025-06-15 - Ticket Price: $150
-2. Artist: Ed Sheeran - Venue: The O2 Arena - Date: 2025-07-20 - Ticket Price: $120
-```
-
----
-
-### **4. List Tickets**
-
-**Command:**
-```sh
-list-tickets
-```
-
-**Description:**  
-Retrieves and displays a list of all tickets.
-
-**Example:**
-```sh
-> list-tickets
-1. Ticket ID: 101 - Concert: Taylor Swift at Madison Square Garden - Buyer: John Doe - Seat: A12 - Status: Booked
-2. Ticket ID: 102 - Concert: Ed Sheeran at The O2 Arena - Buyer: Jane Smith - Seat: B15 - Status: Booked
-```
-
----
-
-### **5. Create Artist**
-
-**Command:**
-```sh
-create-artist <name> <genre> <bio>
-```
-
-**Description:**  
-Creates a new artist with the provided name, genre, and biography.
-
-**Example:**
-```sh
-> create-artist "Adele" "Soul" "Award-winning British singer-songwriter"
-Artist 'Adele' created successfully.
-```
-
----
-
-### **6. Create Venue**
-
-**Command:**
-```sh
-create-venue <name> <location> <capacity>
-```
-
-**Description:**  
-Creates a new venue with the provided name, location, and capacity.
-
-**Example:**
-```sh
-> create-venue "Staples Center" "Los Angeles, CA" 19000
-Venue 'Staples Center' created successfully.
-```
-
----
-
-### **7. Create Concert**
-
-**Command:**
-```sh
-create-concert <artist_id> <venue_id> <date> <ticket_price>
-```
-
-**Description:**  
-Schedules a new concert with the specified artist, venue, date, and ticket price.
-
-**Example:**
-```sh
-> create-concert 1 2 2025-08-10 100
-Concert for artist ID 1 at venue ID 2 on 2025-08-10 created successfully.
-```
-
----
-
-### **8. Book Ticket**
-
-**Command:**
-```sh
-book-ticket <concert_id> <buyer_name> <seat_number>
-```
-
-**Description:**  
-Books a ticket for the specified concert with the buyer's name and seat number.
-
-**Example:**
-```sh
-> book-ticket 1 "Alice Johnson" "C22"
-Ticket booked successfully for Alice Johnson, Seat C22.
-```
-
----
-
-### **9. Cancel Ticket**
-
-**Command:**
-```sh
-cancel-ticket <ticket_id>
-```
-
-**Description:**  
-Cancels the ticket with the given ticket ID.
-
-**Example:**
-```sh
-> cancel-ticket 101
-Ticket ID 101 has been canceled successfully.
-```
-
----
-
-## 🛠️ Setup & Installation
-
-### 💾 Prerequisites
-
-- **Java 17+**
-- **Maven** (for dependency management)
-- **Internet Connection** (to communicate with the server API)
-
----
-
-### 🚀 Running the Client
-
-#### 1️⃣ Clone the Repository
-
-```sh
-git clone https://github.com/StevenScript/concertManagement_Client.git
-cd concertManagement_Client
-```
-
-#### 2️⃣ Build the Application
-
-```sh
-mvn clean install
-```
-
-#### 3️⃣ Run the Application
-
-```sh
-java -jar target/concertManagement_Client-1.0.0.jar
-```
-
----
-
-## 🤮 Testing
-
-### 🧐 Unit Tests
-
-To run the tests:
-
-```sh
-mvn test
-```
-
----
-
-## 🌐 Server Interaction
-
-Ensure that the [Concert Management Server](https://github.com/StevenScript/concertManagement_Server) is running before using the client.
-
----
+Due to being past deadline, I was unable to fully implent all server side features.
+While option 3 doesnt work yet.
 
