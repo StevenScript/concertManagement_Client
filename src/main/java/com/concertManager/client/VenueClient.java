@@ -15,7 +15,7 @@ public class VenueClient {
         this.httpClientWrapper = httpClientWrapper;
     }
 
-    public Venue getVenue(Long id) {
+    public Venue getVenue(Long id) throws IOException {
         String path = "/venues/" + id;
         String response = httpClientWrapper.doGet(path);
         if (response == null) {

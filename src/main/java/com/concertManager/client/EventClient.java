@@ -22,7 +22,7 @@ public class EventClient {
         this.objectMapper.registerModule(new JavaTimeModule());
     }
 
-    public Event getEvent(Long id) {
+    public Event getEvent(Long id) throws IOException {
         String path = "/events/" + id;
         String response = httpClientWrapper.doGet(path);
         if (response == null) {
@@ -53,9 +53,18 @@ public class EventClient {
         }
     }
 
-    public Event[] getEventsByArtistId(Long artistId) throws IOException {
+    public List<Event> getEventsByArtistId(Long artistId) throws IOException {
         String response = httpClientWrapper.doGet("/events/artist/" + artistId);
-        return objectMapper.readValue(response, Event[].class);
+
+        // If response is "" or "[]", parse accordingly
+        if (response.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // Now parse as either an array or list
+        Event[] array = objectMapper.readValue(response, Event[].class);
+        return Arrays.asList(array);
     }
+
 
 }

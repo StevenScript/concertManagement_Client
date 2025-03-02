@@ -19,7 +19,7 @@ public class TicketClient {
         this.objectMapper.registerModule(new JavaTimeModule());
     }
 
-    public Ticket getTicket(Long id) {
+    public Ticket getTicket(Long id) throws IOException {
         String path = "/tickets/" + id;
         String response = httpClientWrapper.doGet(path);
         if (response == null) {
@@ -33,7 +33,7 @@ public class TicketClient {
         }
     }
 
-    public List<Ticket> getTicketsForEvent(Long eventId) {
+    public List<Ticket> getTicketsForEvent(Long eventId) throws IOException {
         String path = "/tickets/event/" + eventId;
         String response = httpClientWrapper.doGet(path);
         if (response == null) return List.of();

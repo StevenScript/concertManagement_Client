@@ -17,7 +17,7 @@ public class ArtistClient {
         this.objectMapper.registerModule(new JavaTimeModule());
     }
 
-    public Artist getArtist(Long id) {
+    public Artist getArtist(Long id) throws IOException {
         String path = "/artists/" + id;
         String response = httpClientWrapper.doGet(path);
         if (response == null) {

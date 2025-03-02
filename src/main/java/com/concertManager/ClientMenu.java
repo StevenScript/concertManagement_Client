@@ -65,17 +65,33 @@ public class ClientMenu {
                     break;
                 }
                 case "3": {
-                    Long artistId = 0L;
-                    List<Event> events = List.of(eventClient.getEventsByArtistId(artistId));
-                    if (events.isEmpty()) {
-                        System.out.println("No events found for artist ID: " + artistId);
-                    } else {
-                        for (Event e : events) {
-                            System.out.println(e.getEventDate() + " - $" + e.getTicketPrice());
+                    System.out.print("Enter artist ID: ");
+                    String artistIdInput = scanner.nextLine().trim();
+                    if (artistIdInput.isEmpty()) {
+                        System.out.println("Invalid input. Artist ID cannot be blank.");
+                        break; // or prompt again if desired
+                    }
+                    try {
+                        Long artistId = Long.parseLong(artistIdInput);
+                        // Debug print: you can remove this once working
+                        System.out.println("DEBUG: Parsed artist ID: " + artistId);
+
+                        // Assume getEventsByArtistId returns a List<Event>
+                        List<Event> events = eventClient.getEventsByArtistId(artistId);
+                        if (events.isEmpty()) {
+                            System.out.println("No events found for artist ID: " + artistId);
+                        } else {
+                            for (Event e : events) {
+                                System.out.println(e.getEventDate() + " - $" + e.getTicketPrice());
+                            }
                         }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid ID format. Please enter a valid number.");
+                    } catch (IOException e) {
+                        System.out.println("Error fetching events: " + e.getMessage());
                     }
                     break;
-                }
+            }
                 case "4":
                     System.out.print("Enter event ID to view available tickets: ");
                     try {
